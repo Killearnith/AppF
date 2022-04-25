@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.client.appfp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logoapp"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logoapp"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppBP">
+        <activity
+            android:name=".verificadoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OtpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".telefonoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <receiver
+            android:name=".Android.SMSBroadcastReceiver"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

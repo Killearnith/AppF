@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1955" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/drawable/bg_gradient.xml" value="0.1955" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1955" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/drawable/splash_inicial.xml" value="0.1955" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/layout/activity_main.xml" value="0.17255434782608695" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/layout/activity_otp.xml" value="0.17657657657657658" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/layout/activity_telefono.xml" value="0.14" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppBP/app/src/main/res/layout/activity_verificado.xml" value="0.17657657657657658" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppFP/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.118" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppFP/app/src/main/res/drawable/bg_gradient.xml" value="0.118" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppFP/app/src/main/res/drawable/ic_launcher_background.xml" value="0.118" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/AppFP/app/src/main/res/drawable/splash_inicial.xml" value="0.118" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.15489130434782608" />
+      </ProjectState>
+    </option>
+  </component>
+</project>
