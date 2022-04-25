@@ -1,4 +1,4 @@
-# App Bien Diseñada
+# App Mal Diseñada
 _Aplicación bien programada, planteada para el TFG: Benchmark para la detección de vulnerabilidades en la utilización de la API SMS Retriever en ecosistemas Android._
 
 Está aplicación sirve para comprender principalmente las características de la API y su funcionamiento junto con el Servidor SMS OTP bien programado.
