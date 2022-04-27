@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KEvolution</string>
+    <string name="app_name">KEvolutionF</string>
     <string name="title_activity_telefono">TelefonoActivity</string>
     <string name="welcome">"Welcome !"</string>
     <string name="cabeceratelefono"> Seleccione un número de telefono para verificar su identidad:</string>
