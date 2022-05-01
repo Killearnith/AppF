@@ -47,10 +47,13 @@ public class OtpActivity extends AppCompatActivity {
     private FirebaseAuth auten;
     private String auth;
     private OTPClave otpClave;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
+
+        //Codigo HASH de la app es: nXzGtk7rNLW
 
         //Esconder la barra superior de la APP
         ActionBar actionBar = getSupportActionBar();
@@ -65,8 +68,8 @@ public class OtpActivity extends AppCompatActivity {
         if (extras != null) {
             nTel = extras.getString("tel");
             otpClave.setTelefono(nTel);
-            if(nTel!=null) {
-                SharedPreferences sharedPref = this.getSharedPreferences("guardartel",MODE_PRIVATE);
+            if (nTel != null) {
+                SharedPreferences sharedPref = this.getSharedPreferences("guardartel", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("tel", nTel);
                 editor.apply();
@@ -91,13 +94,13 @@ public class OtpActivity extends AppCompatActivity {
         final TextView textView = (TextView) findViewById(R.id.text);
 
         //Obtener token de Auth
-        String url ="https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCO0wQa_fia6ojLkFCzLG-sft5XUWF2Skw";
-        Log.d("Test","Aqui llego");
+        String url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCO0wQa_fia6ojLkFCzLG-sft5XUWF2Skw";
+        Log.d("Test", "Aqui llego");
         // Request a string response from the provided URL.
         RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
         JSONObject postData = new JSONObject();
         try {
-            postData.put("email","a@a.com");
+            postData.put("email", "a@a.com");
             postData.put("password", "123456");
             postData.put("returnSecureToken", true);
         } catch (JSONException e) {
@@ -120,7 +123,7 @@ public class OtpActivity extends AppCompatActivity {
         });
         requestQueue.add(jsonObjectRequest);
 
-        if(nTel!=null) {
+        if (nTel != null) {
             auten.signInWithEmailAndPassword("a@a.com", "123456").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -132,13 +135,14 @@ public class OtpActivity extends AppCompatActivity {
                         JSONObject postData = new JSONObject();
                         try {
                             postData.put("tel", nTel);
+                            postData.put("hash", "nXzGtk7rNLW");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, postData, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(getApplicationContext(), "Response: " + response, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getApplicationContext(), "Response: " + response, Toast.LENGTH_LONG).show();
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -161,26 +165,28 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     public void onContinuar(View v) {
-        pBar.setVisibility(View.VISIBLE);
-        clave = Integer.parseInt(String.valueOf(cOTP.getText()));
-        //FIX#01 Guardar el num tel en SharedPreferences para obtenerlo despues en la ivnvocación posterior.
-        SharedPreferences sharedPref = getSharedPreferences("guardartel",MODE_PRIVATE);
-        String tel = sharedPref.getString("tel","No ha llegado");
-        Toast.makeText(this, "tel shared es: "+tel, Toast.LENGTH_LONG).show();
-        //
-        //Obtener token de Auth
-        String url ="https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCO0wQa_fia6ojLkFCzLG-sft5XUWF2Skw";
-        Log.d("Test","Aqui llego");
-        // Request a string response from the provided URL.
-        RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
-        JSONObject postData = new JSONObject();
-        try {
-            postData.put("email","a@a.com");
-            postData.put("password", "123456");
-            postData.put("returnSecureToken", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        //Comprobamos que el campo pasado no sea nulo
+        if (!(cOTP.getText().toString().equals(""))) {
+            pBar.setVisibility(View.VISIBLE);
+            clave = Integer.parseInt(String.valueOf(cOTP.getText()));
+            //FIX#01 Guardar el num tel en SharedPreferences para obtenerlo despues en la invocación posterior.
+            SharedPreferences sharedPref = getSharedPreferences("guardartel", MODE_PRIVATE);
+            String tel = sharedPref.getString("tel", "No ha llegado");
+            Toast.makeText(this, "tel shared es: " + tel, Toast.LENGTH_LONG).show();
+            //
+            //Obtener token de Auth
+            String url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCO0wQa_fia6ojLkFCzLG-sft5XUWF2Skw";
+            Log.d("Test", "Aqui llego");
+            // Request a string response from the provided URL.
+            RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
+            JSONObject postData = new JSONObject();
+            try {
+                postData.put("email", "a@a.com");
+                postData.put("password", "123456");
+                postData.put("returnSecureToken", true);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postData, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -197,53 +203,55 @@ public class OtpActivity extends AppCompatActivity {
                 }
             });
             requestQueue.add(jsonObjectRequest);
-        //
-        //Codigo correspondiente al envio por API Rest al Servidor para comprobar la clave OTP.
-        auten.signInWithEmailAndPassword("a@a.com","123456").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    String url ="https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth="+auth;
-                    // Request a string response from the provided URL.
-                    RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
-                    JSONObject newData = new JSONObject();
-                    try {
-                        newData.put("tel", tel);
-                        newData.put("otp", clave);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            //
+            //Codigo correspondiente al envio por API Rest al Servidor para comprobar la clave OTP.
+            auten.signInWithEmailAndPassword("a@a.com", "123456").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        String url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
+                        // Request a string response from the provided URL.
+                        RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
+                        JSONObject newData = new JSONObject();
+                        try {
+                            newData.put("hash", null);
+                            newData.put("tel", tel);
+                            newData.put("otp", clave);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.PUT, url, newData, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.d("FIN", "Pasamos a la siguiente actividad");
+                                Intent verifIntent = new Intent(OtpActivity.this, verificadoActivity.class); //Mover de la Clase B a la C
+                                verifIntent.putExtra("auth", auth); //Mandamos el token de auth para API REST.
+                                startActivity(verifIntent);
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                error.printStackTrace();
+                            }
+                        });
+                        requestQueue.add(jsonObjectRequest2);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error de auth", Toast.LENGTH_SHORT).show();
                     }
-                    JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.PUT, url, newData, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.d("FIN", "Pasamos a la siguiente actividad");
-                            Intent verifIntent = new Intent(OtpActivity.this,verificadoActivity.class); //Mover de la Clase B a la C
-                            verifIntent.putExtra("auth",auth); //Mandamos el token de auth para API REST.
-                            startActivity(verifIntent);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                        }
-                    });
-                    requestQueue.add(jsonObjectRequest2);
                 }
-                else{
-                    Toast.makeText(getApplicationContext(), "Error de auth", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        // Instantiate the RequestQueue.
+            });
+            // Instantiate the RequestQueue.
 
-        //Código necesario para obtener el codigo hash de la app
-        //AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
-        //Log.d(TAG,"El código hash de la app es: "+appSignatureHelper.getAppSignatures().get(0));
-        //Codigo HASH de la app es: g3Mji1k3j7Q
+            //Código necesario para obtener el codigo hash de la app
+            //AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
+            //Log.d(TAG,"El código hash de la app es: "+appSignatureHelper.getAppSignatures().get(0));
+            //Codigo HASH de la app es: nXzGtk7rNLW
+        } else
+            Toast.makeText(this, "Es necesario recibir un código OTP primero", Toast.LENGTH_LONG).show();
 
     }
 
-    private void inicioClienteSMSRetriever(){
+    private void inicioClienteSMSRetriever() {
         // Get an instance of SmsRetrieverClient, used to start listening for a matching
         // SMS message.
         SmsRetrieverClient client = SmsRetriever.getClient(this /* context */);

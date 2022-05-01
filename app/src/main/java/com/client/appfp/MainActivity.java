@@ -20,7 +20,7 @@ import com.google.android.gms.auth.api.credentials.CredentialsApi;
 import com.google.android.gms.auth.api.credentials.HintRequest;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    //Codigo HASH de la app es: g3Mji1k3j7Q
+    //Codigo HASH de la app es: nXzGtk7rNLW
 
     private static final String TAG = "MenuInicial";
     private static final int RESOLVE_HINT = 200;       //Codigo de respuesta correcto para obtener el número de telefono
@@ -47,11 +47,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textoMovil = (EditText) findViewById(R.id.NumTel);
         entrada.setOnClickListener(this);       //Asignar el evento al botón
 
-        // Inside Main Activity
-    /*
-        AppSignatureHelper appSignatureHashHelper = new AppSignatureHelper(MainActivity.this);
-        Log.d(TAG, "HashKey: " + appSignatureHashHelper.getAppSignatures().get(0));
-    */
+        // Codigo para generar el hashkey
+        //AppSignatureHelper appSignatureHashHelper = new AppSignatureHelper(MainActivity.this);
+        //Log.d(TAG, "HashKey: " + appSignatureHashHelper.getAppSignatures().get(0));
+
 
     }
 
@@ -97,12 +96,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onContinuar(View v) {
+        //Comprobamos que el campo pasado no sea nulo
+        if (!(textoMovil.getText().toString().equals(""))) {
         pBar.setVisibility(View.VISIBLE);
-        Intent otpIntent = new Intent(MainActivity.this,OtpActivity.class); //Mover de la Clase A a la B
-        otpIntent.putExtra("tel",numTel);
-        Toast.makeText(this, "Num tel es: "+numTel, Toast.LENGTH_LONG).show();
+        Intent otpIntent = new Intent(MainActivity.this, OtpActivity.class); //Mover de la Clase A a la B
+        otpIntent.putExtra("tel", numTel);
+        Toast.makeText(this, "Num tel es: " + textoMovil.getText().toString(), Toast.LENGTH_LONG).show();
         //Pasamos el num de Telefono
         startActivity(otpIntent);
+    }else
+        Toast.makeText(this, "Es necesario pasar un número de teléfono", Toast.LENGTH_LONG).show();
+
         //Código necesario para obtener el codigo hash de la app
         //AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
         //Log.d(TAG,"El código hash de la app es: "+appSignatureHelper.getAppSignatures().get(0));

@@ -57,6 +57,7 @@ public class verificadoActivity extends AppCompatActivity {
                                 try {
                                     token = response.getString("token");
                                     medio.setText("El token recibido es: "+token);
+                                    Log.d(TAG, "¡Se recibe el token!");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -91,6 +92,8 @@ public class verificadoActivity extends AppCompatActivity {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 Log.d(TAG, "FALLO AL RECIBIR TOKEN");
+                                medio.setText("FALLO AL RECIBIR TOKEN");
+
                                 error.printStackTrace();
                             }
                         });
