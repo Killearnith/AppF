@@ -1,4 +1,4 @@
-package com.client.appfp.Android;
+package com.client.appfp.Actividades.Android;
 
 import android.content.Context;
 import android.content.ContextWrapper;

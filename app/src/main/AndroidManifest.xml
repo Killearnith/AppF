@@ -12,16 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppBP">
         <activity
-            android:name=".verificadoActivity"
+            android:name=".Actividades.verificadoActivity"
             android:exported="false" />
         <activity
-            android:name=".OtpActivity"
+            android:name=".Actividades.OtpActivity"
             android:exported="false" />
         <activity
-            android:name=".telefonoActivity"
+            android:name=".Actividades.telefonoActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Actividades.MainActivity"
             android:exported="true"
             android:theme="@style/Splash">
             <intent-filter>
@@ -36,7 +36,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <receiver
-            android:name=".Android.SMSBroadcastReceiver"
+            android:name=".Actividades.Android.SMSBroadcastReceiver"
             android:exported="true">
 
             <intent-filter>

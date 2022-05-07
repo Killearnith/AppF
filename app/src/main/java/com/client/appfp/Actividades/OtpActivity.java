@@ -1,10 +1,9 @@
-package com.client.appfp;
+package com.client.appfp.Actividades;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,8 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.client.appfp.Android.SMSBroadcastReceiver;
-import com.client.appfp.Modelo.OTPClave;
+import com.client.appfp.Modelo.Datos;
+import com.client.appfp.R;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public class OtpActivity extends AppCompatActivity {
     private FirebaseApp app;
     private FirebaseAuth auten;
     private String auth;
-    private OTPClave otpClave;
+    private Datos dat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,18 +60,23 @@ public class OtpActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.hide();
 
-        //Modelo
-        otpClave = new OTPClave();
-        //
+
+
         //Obtenemos los datos del bundle de la actividad anterior
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            nTel = extras.getString("tel");
-            otpClave.setTelefono(nTel);
+            dat = (Datos) extras.getParcelable("datos");  //Obtenemos el modelo de la actividad anterior
+            if(dat!=null) {
+                nTel = dat.getTelefono();
+            }
             if (nTel != null) {
+                //Creamos el gson para guardar un json en shared preferences
+                Gson gson = new Gson();
+                String json = gson.toJson(dat);
                 SharedPreferences sharedPref = this.getSharedPreferences("guardartel", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("tel", nTel);
+                //editor.putString("tel", nTel);
+                editor.putString("datos", json); //Guardamos el objeto para cuando llegue el SMS
                 editor.apply();
             }
         }
@@ -172,8 +177,13 @@ public class OtpActivity extends AppCompatActivity {
             clave = Integer.parseInt(String.valueOf(cOTP.getText()));
             //FIX#01 Guardar el num tel en SharedPreferences para obtenerlo despues en la invocación posterior.
             SharedPreferences sharedPref = getSharedPreferences("guardartel", MODE_PRIVATE);
-            String tel = sharedPref.getString("tel", "No ha llegado");
-            Toast.makeText(this, "tel shared es: " + tel, Toast.LENGTH_LONG).show();
+            //String tel = sharedPref.getString("tel", "No ha llegado");
+            Gson gson = new Gson();
+            String json = sharedPref.getString("datos", "No ha llegado");
+            Datos dat = gson.fromJson(json, Datos.class);
+            String tel = dat.getTelefono();
+            dat.setClave(String.valueOf(cOTP.getText())); //añadimos el OTP al modelo para pasarlo a la sig activity
+            //Toast.makeText(this, "tel shared es: " + tel, Toast.LENGTH_LONG).show();
             //
             //Obtener token de Auth
             String url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCO0wQa_fia6ojLkFCzLG-sft5XUWF2Skw";
@@ -193,6 +203,7 @@ public class OtpActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     try {
                         auth = response.getString("idToken");
+                        dat.setAuth(auth);      //añadimos el auth al modelo para pasarlo a la sig activity
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -226,7 +237,7 @@ public class OtpActivity extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 Log.d("FIN", "Pasamos a la siguiente actividad");
                                 Intent verifIntent = new Intent(OtpActivity.this, verificadoActivity.class); //Mover de la Clase B a la C
-                                verifIntent.putExtra("auth", auth); //Mandamos el token de auth para API REST.
+                                verifIntent.putExtra("datos", dat); //Mandamos el token de auth para API REST.
                                 startActivity(verifIntent);
                             }
                         }, new Response.ErrorListener() {

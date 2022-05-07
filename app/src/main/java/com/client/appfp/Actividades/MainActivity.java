@@ -1,4 +1,4 @@
-package com.client.appfp;
+package com.client.appfp.Actividades;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,7 +13,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.client.appfp.Android.AppSignatureHelper;
+import com.client.appfp.Modelo.Datos;
+import com.client.appfp.R;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.Credentials;
 import com.google.android.gms.auth.api.credentials.CredentialsApi;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button entrada , bCont;
     private ProgressBar pBar;
     private EditText textoMovil;
+    private Datos datos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bCont.setVisibility(View.INVISIBLE);
         textoMovil = (EditText) findViewById(R.id.NumTel);
         entrada.setOnClickListener(this);       //Asignar el evento al botón
+
+        //Creamos el modelo
+        datos = new Datos();
 
         // Codigo para generar el hashkey
         //AppSignatureHelper appSignatureHashHelper = new AppSignatureHelper(MainActivity.this);
@@ -85,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case RESULT_OK:
                     Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                    numTel=credential.getId();  //<-- obtenemos el string correspondiente al numbero de telefono seleccionado
+                    numTel=credential.getId();//<-- obtenemos el string correspondiente al numbero de telefono seleccionado
+                    datos.setTelefono(numTel);      //Guardamos el numero de tel en el modelo
                     numSaneado= numTel.substring(0,3)+" "+numTel.substring(3);   //Saneamos la salida en formato más legible
                     textoMovil.setText(numSaneado); ///Ponemos el texto en el EditText
                     bCont.setVisibility(View.VISIBLE);
@@ -102,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!(textoMovil.getText().toString().equals(""))) {
         pBar.setVisibility(View.VISIBLE);
         Intent otpIntent = new Intent(MainActivity.this, OtpActivity.class); //Mover de la Clase A a la B
-        otpIntent.putExtra("tel", numTel);
+        //otpIntent.putExtra("tel", numTel);
+        otpIntent.putExtra("datos", datos);
         Toast.makeText(this, "Num tel es: " + textoMovil.getText().toString(), Toast.LENGTH_LONG).show();
         //Pasamos el num de Telefono
         startActivity(otpIntent);
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Código necesario para obtener el codigo hash de la app
         //AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
         //Log.d(TAG,"El código hash de la app es: "+appSignatureHelper.getAppSignatures().get(0));
-        //Codigo HASH de la app es: g3Mji1k3j7Q
+        //Codigo HASH de la app es: nXzGtk7rNLW
     }
 
     @Override

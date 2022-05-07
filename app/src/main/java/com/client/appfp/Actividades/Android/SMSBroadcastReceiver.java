@@ -1,4 +1,4 @@
-package com.client.appfp.Android;
+package com.client.appfp.Actividades.Android;
 
 import static com.google.android.gms.auth.api.phone.SmsRetriever.SMS_RETRIEVED_ACTION;
 
@@ -8,12 +8,12 @@ import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 //---Imports de google para la API SMSRetriever
-import com.client.appfp.OtpActivity;
+import com.client.appfp.Actividades.OtpActivity;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.Status;
 //----- Import del modelo OTP
-import com.client.appfp.Modelo.OTPClave;
+
 
 /**
  * SMSBroadcastReceiver recibe el mensaje SMS llega a la aplicación y parsea los campos para obtener los diferentes,
@@ -35,10 +35,14 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
                     if (CommonStatusCodes.SUCCESS==0) {
                         // Get SMS message contents
                         String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
+                        String[] partes2 = new String[0];
                         if (message != null) {
                             String[] partes = message.split(" ");
-                            String[] partes2= partes[4].split("\n");
-                            //otpClave.setClave(partes[4]);
+                            if(partes.length>3) {
+                                partes2 = partes[4].split("\n");
+                            }else{
+                                Log.d(TAG,"Error al traer el Mensaje SMS.");
+                            }                            //otpClave.setClave(partes[4]);
                             Intent i = new Intent(context, OtpActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
