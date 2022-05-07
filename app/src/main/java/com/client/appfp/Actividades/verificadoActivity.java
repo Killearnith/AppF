@@ -59,6 +59,7 @@ public class verificadoActivity extends AppCompatActivity {
                                 try {
                                     token = response.getString("token");
                                     medio.setText("El token recibido es: "+token);
+                                    dat.setTokenconex(token);
                                     Log.d(TAG, "¡Se recibe el token!");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
