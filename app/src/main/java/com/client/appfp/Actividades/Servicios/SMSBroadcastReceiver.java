@@ -1,4 +1,4 @@
-package com.client.appfp.Actividades.Android;
+package com.client.appfp.Actividades.Servicios;
 
 import static com.google.android.gms.auth.api.phone.SmsRetriever.SMS_RETRIEVED_ACTION;
 
@@ -20,7 +20,7 @@ import com.google.android.gms.common.api.Status;
  * datos que se mandan por el mensajes SMS como el código OTP.
  * El SMS se obtiene de SmsRetriever.SMS_RETRIEVED_ACTION.
  */
-public class SMSBroadcastReceiver extends BroadcastReceiver {
+public class    SMSBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "BroadcastSMS";
     private String nTel;
@@ -36,22 +36,19 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
                         // Get SMS message contents
                         String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
                         String[] partes2 = new String[0];
-                        if (message != null) {
+                        if(message.contains("nXzGtk7rNLW")) {
                             String[] partes = message.split(" ");
                             if(partes.length>3) {
                                 partes2 = partes[4].split("\n");
                             }else{
                                 Log.d(TAG,"Error al traer el Mensaje SMS.");
-                            }                            //otpClave.setClave(partes[4]);
+                            }
                             Intent i = new Intent(context, OtpActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             i.putExtra("message", partes2[0]);
-                            //i.putExtra("tel", nTel);
                             context.startActivity(i);
-                            //i.setAction(SMS_RETRIEVED_ACTION);
-                            //context.sendBroadcast(i);
+
                         }
                     }else if (CommonStatusCodes.TIMEOUT==5){
                         Log.d(TAG,"El tiempo del broadcast ha excedido su limite de 5 minutos.");
