@@ -19,6 +19,7 @@ public class Datos implements Parcelable {
     private String telefono;
     private String auth;
     private String tokenconex;
+    private String urlDB;
     /*
     public Datos(String clave, String telefono){
         this.telefono=telefono;
@@ -26,11 +27,13 @@ public class Datos implements Parcelable {
     }
     */
     //Constructor completo
-    public Datos(String clave, String telefono, String auth, String tokenconex){
+    public Datos(String clave, String telefono, String auth, String tokenconex, String urlDB){
         this.clave = clave;
         this.telefono = telefono;
         this.auth =  auth;
         this.tokenconex = tokenconex;
+        this.urlDB = urlDB;
+
     }
 
     //Constructor vacio
@@ -69,12 +72,21 @@ public class Datos implements Parcelable {
         this.tokenconex = tokenconex;
     }
 
+    public String getUrlDB() {
+        return urlDB;
+    }
+
+    public void setUrlDB(String urlDB) {
+        this.urlDB = urlDB;
+    }
+
     // Parcelling part
     public Datos(Parcel in){
         this.clave = in.readString();
         this.telefono = in.readString();
         this.auth =  in.readString();
         this.tokenconex = in.readString();
+        this.urlDB = in.readString();
     }
 
     @Override
@@ -88,5 +100,6 @@ public class Datos implements Parcelable {
         dest.writeString(this.telefono);
         dest.writeString(this.auth);
         dest.writeString(this.tokenconex);
+        dest.writeString(this.urlDB);
     }
 }

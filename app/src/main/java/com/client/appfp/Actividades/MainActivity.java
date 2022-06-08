@@ -2,10 +2,12 @@ package com.client.appfp.Actividades;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MenuInicial";
     private static final int RESOLVE_HINT = 200;       //Codigo de respuesta correcto para obtener el número de telefono
     private String numTel, numSaneado;
-    private Button entrada , bCont;
+    private Button entrada , bCont, bnBD;
     private ProgressBar pBar;
     private EditText textoMovil;
     private Datos datos;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Enlazar views
         entrada = (Button) findViewById(R.id.botonSelTel);
         bCont = (Button) findViewById(R.id.buttonContinuar);
+        bnBD = (Button) findViewById(R.id.buttonNewDB);
         pBar = (ProgressBar) findViewById(R.id.progressBar);
         pBar.setVisibility(View.INVISIBLE);
         bCont.setVisibility(View.INVISIBLE);
@@ -108,9 +111,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!(textoMovil.getText().toString().equals(""))) {
         pBar.setVisibility(View.VISIBLE);
         Intent otpIntent = new Intent(MainActivity.this, OtpActivity.class); //Mover de la Clase A a la B
-        //otpIntent.putExtra("tel", numTel);
+        Log.d("BD","El valor de la url es: "+datos.getUrlDB());
         otpIntent.putExtra("datos", datos);
-        Toast.makeText(this, "Num tel es: " + textoMovil.getText().toString(), Toast.LENGTH_LONG).show();
         //Pasamos el num de Telefono
         startActivity(otpIntent);
     }else
@@ -126,4 +128,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestHint();
     }
 
+
+    //Metodo para obtener un nuevo enlace para la BD por API REST
+    public void onNewDB(View view) {
+        AlertDialog.Builder cst = new AlertDialog.Builder(this);
+        cst.setTitle("Introduce la nueva URL de la Base de Datos (API REST)");
+        final EditText in = new EditText(this);
+        in.setInputType(InputType.TYPE_CLASS_TEXT);
+        cst.setView(in);
+        cst.setPositiveButton("Continuar", (dg, w) -> datos.setUrlDB(in.getText().toString()));
+        cst.setNegativeButton("Cancelar", (dg, w) -> dg.cancel());
+        cst.show();
+    }
 }

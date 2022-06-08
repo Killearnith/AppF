@@ -21,7 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class verificadoActivity extends AppCompatActivity {
-    private String auth, token;
+    private String auth, token, urlBD;
     private TextView medio;
     private static final String TAG = "verifActivity";
     private Datos dat;
@@ -44,13 +44,19 @@ public class verificadoActivity extends AppCompatActivity {
         if (extras != null) {
             dat = (Datos) extras.getParcelable("datos");        //Obtenemos el modelo de la actividad anterior
             auth = dat.getAuth();
+            urlBD = dat.getUrlDB();
         }
         //Esperamos 3 segundos
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
                 RequestQueue queue = Volley.newRequestQueue(verificadoActivity.this);
-                String url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth="+auth;
+                String url;
+                if(urlBD == null) {
+                    url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
+                }else {
+                    url = urlBD;
+                }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -67,11 +73,14 @@ public class verificadoActivity extends AppCompatActivity {
 
                                 RequestQueue requestDelQueue = Volley.newRequestQueue(verificadoActivity.this);
                                 JSONObject delData = new JSONObject();
-                                String url ="https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth="+auth;
+                                String url;
+                                if(urlBD == null) {
+                                    url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
+                                }else {
+                                    url = urlBD;
+                                }
                                 try {
-
                                     delData.put("token", null);
-                                    //delData.put("otp", null);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -103,7 +112,5 @@ public class verificadoActivity extends AppCompatActivity {
                 queue.add(jsonObjectRequest);
             }
         }, 3000);
-
-
     }
 }

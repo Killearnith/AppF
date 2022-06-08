@@ -41,7 +41,7 @@ public class OtpActivity extends AppCompatActivity {
     private Button bCont;
     private ProgressBar pBar;
     private EditText cOTP;
-    private String nTel;
+    private String nTel, urlBD;
     private int clave;
     private FirebaseApp app;
     private FirebaseAuth auten;
@@ -68,6 +68,7 @@ public class OtpActivity extends AppCompatActivity {
             dat = (Datos) extras.getParcelable("datos");  //Obtenemos el modelo de la actividad anterior
             if(dat!=null) {
                 nTel = dat.getTelefono();
+                urlBD = dat.getUrlDB();
             }
             if (nTel != null) {
                 //Creamos el gson para guardar un json en shared preferences
@@ -134,9 +135,13 @@ public class OtpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        String url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
-                        Log.d("Test", "Aqui llego");
-                        // Request a string response from the provided URL.
+                        String url;
+                        if(urlBD == null) {
+                            url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
+                        }else {
+                            url = urlBD;
+                        }
+                        //Codigo correspondiente al envio por API Rest al Servidor para comprobar la clave OTP.
                         RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
                         JSONObject postData = new JSONObject();
                         try {
@@ -153,7 +158,7 @@ public class OtpActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                error.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "Error URL no existente o sin permisos", Toast.LENGTH_SHORT).show();
                             }
                         });
                         requestQueue.add(jsonObjectRequest);
@@ -163,7 +168,6 @@ public class OtpActivity extends AppCompatActivity {
                     }
                 }
             });
-            // Instantiate the RequestQueue.
         }
 
         //Comenzamos el cliente SMSRetriever
@@ -188,7 +192,7 @@ public class OtpActivity extends AppCompatActivity {
             //Obtener token de Auth
             String url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCO0wQa_fia6ojLkFCzLG-sft5XUWF2Skw";
             Log.d("Test", "Aqui llego");
-            // Request a string response from the provided URL.
+            //Codigo correspondiente al envio por API Rest al Servidor para comprobar la clave OTP.
             RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
             JSONObject postData = new JSONObject();
             try {
@@ -221,8 +225,13 @@ public class OtpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        String url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
-                        // Request a string response from the provided URL.
+                        String url;
+                        if(urlBD == null) {
+                            url = "https://smsretrieverservera-default-rtdb.europe-west1.firebasedatabase.app/numeros.json?auth=" + auth;
+                        }else {
+                            url = urlBD;
+                        }
+                        // Se pide una JSON respuesta de la URL BD.
                         RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
                         JSONObject newData = new JSONObject();
                         try {
@@ -243,7 +252,7 @@ public class OtpActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                error.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "Error URL no existente o sin permisos", Toast.LENGTH_SHORT).show();
                             }
                         });
                         requestQueue.add(jsonObjectRequest2);
@@ -252,7 +261,6 @@ public class OtpActivity extends AppCompatActivity {
                     }
                 }
             });
-            // Instantiate the RequestQueue.
 
             //Código necesario para obtener el codigo hash de la app
             //AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
@@ -264,22 +272,21 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private void inicioClienteSMSRetriever() {
-        // Get an instance of SmsRetrieverClient, used to start listening for a matching
-        // SMS message.
+
         SmsRetrieverClient client = SmsRetriever.getClient(this /* context */);
-        // Starts SmsRetriever, which waits for ONE matching SMS message until timeout
-        // (5 minutes). The matching SMS message will be sent via a Broadcast Intent with
-        // action SmsRetriever#SMS_RETRIEVED_ACTION.
+        // SmsRetriever, espera a que llegue un SMS(5 minutes).
+        // El SMS se recibe por un BroadcastIntent dentro de
+        // SmsRetriever#SMS_RETRIEVED_ACTION.
         Task<Void> task = client.startSmsRetriever();
         // Listen for success/failure of the start Task. If in a background thread, this
         // can be made blocking using Tasks.await(task, [timeout]);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // Successfully started retriever, expect broadcast intent
-                //SMSBroadcastReceiver s = new SMSBroadcastReceiver();
+                // Se reciben los datos por el intent
                 Intent intent = getIntent();
                 String msg = intent.getStringExtra("message");
+                //Se modifica la vista
                 cOTP.setText(msg);
                 if(msg!=null) {
                     bCont.setVisibility(View.VISIBLE);
@@ -289,9 +296,7 @@ public class OtpActivity extends AppCompatActivity {
 
         task.addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // Failed to start retriever, inspect Exception for more details
-            }
+            public void onFailure(@NonNull Exception e) { }
         });
     }
 }
