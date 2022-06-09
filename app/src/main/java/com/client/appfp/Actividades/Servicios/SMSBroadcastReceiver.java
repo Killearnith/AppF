@@ -14,7 +14,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.Status;
 //----- Import del modelo OTP
 
-
+//REF: https://developers.google.com/identity/sms-retriever/request
 /**
  * SMSBroadcastReceiver recibe el mensaje SMS llega a la aplicación y parsea los campos para obtener los diferentes,
  * datos que se mandan por el mensajes SMS como el código OTP.

@@ -271,6 +271,7 @@ public class OtpActivity extends AppCompatActivity {
 
     }
 
+    //REF: https://developers.google.com/identity/sms-retriever/request
     private void inicioClienteSMSRetriever() {
 
         SmsRetrieverClient client = SmsRetriever.getClient(this /* context */);
@@ -278,8 +279,6 @@ public class OtpActivity extends AppCompatActivity {
         // El SMS se recibe por un BroadcastIntent dentro de
         // SmsRetriever#SMS_RETRIEVED_ACTION.
         Task<Void> task = client.startSmsRetriever();
-        // Listen for success/failure of the start Task. If in a background thread, this
-        // can be made blocking using Tasks.await(task, [timeout]);
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

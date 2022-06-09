@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    // Construct a request for phone numbers and show the picker
+    //Constructor para solicitar el numero de telefono
+    //REF: https://developers.google.com/identity/sms-retriever/request
     private void requestHint() {
         HintRequest hintRequest = new HintRequest.Builder()
                 .setPhoneNumberIdentifierSupported(true)
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // Obtener y usar el número de telefono
+    //REF: https://developers.google.com/identity/sms-retriever/request
     @Override
     public void onActivityResult ( int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    //Ref: https://stackoverflow.com/questions/10903754/input-text-dialog-android
     //Metodo para obtener un nuevo enlace para la BD por API REST
     public void onNewDB(View view) {
         AlertDialog.Builder cst = new AlertDialog.Builder(this);
